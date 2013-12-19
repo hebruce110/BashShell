@@ -2,7 +2,7 @@
 ###############配置项目名称和路径等相关参数
 projectName="PinkDiary" #项目所在目录的名称
 isWorkSpace=false  #判断是用的workspace还是直接project，workspace设置为true，否则设置为false
-projectDir=~/work/$projectName #项目所在目录的绝对路径
+projectDir=~/work/PinkDiary_Build #项目所在目录的绝对路径
 buildConfig="CWeb" #编译的方式,默认为Release,还有Debug等
 
 ###############配置下载的文件名称和路径等相关参数
@@ -14,17 +14,30 @@ url="http://192.168.1.115/pd" #下载路径
 ##############################以下部分为自动生产部分，不需要手动修改############################
 ##########################################################################################
 
+###Log的路径,如果发现log里又乱码请在终端执行:export LC_ALL=zh_CN.GB2312;export LANG=zh_CN.GB2312
+logPath=~/xcodebuild_$buildConfig.log
+
+date_Y_M_D_W_T()
+{
+    WEEKDAYS=(星期日 星期一 星期二 星期三 星期四 星期五 星期六)
+    WEEKDAY=$(date +%w)
+    DT="$(date +%Y年%m月%d日) ${WEEKDAYS[$WEEKDAY]} $(date "+%H:%M:%S")"
+    echo "$DT"
+}
+
 ###############检查html等文件放置目录是否存在，不存在就创建
-echo "开始编译................"
-echo "当前编译模式为:$buildConfig"
-echo "开始目录检查........"
+echo "~~~~~~~~~~~~~~~~~~~开始编译~~~~~~~~~~~~~~~~~~~" >>$logPath
+echo "开始时间:$(date_Y_M_D_W_T)" >>$logPath
+echo "项目名称:$projectName" >>$logPath
+echo "编译模式:$buildConfig" >>$logPath
+echo "开始目录检查........" >>$logPath
 
 if [ -d "$wwwIPADir" ]; then
-	echo "文件目录存在"
+	echo "文件目录存在" >>$logPath
 else 
-	echo "文件目录不存在"
+	echo "文件目录不存在" >>$logPath
     mkdir -pv $wwwIPADir
-	echo "创建${wwwIPADir}目录成功"
+	echo "创建${wwwIPADir}目录成功" >>$logPath
 fi
 
 ###############进入项目目录
@@ -40,25 +53,25 @@ bundleBuildVersion=`/usr/libexec/PlistBuddy -c "Print CFBundleVersion" $infoPlis
 
 ###############开始编译app
 if $isWorkSpace ; then  #判断编译方式
-    echo  "开始编译workspace...."
+    echo  "开始编译workspace...." >>$logPath
     xcodebuild  -workspace $projectName.xcworkspace -scheme $projectName  -configuration $buildConfig clean build SYMROOT=$buildAppToDir
 else
-    echo  "开始编译target...."
+    echo  "开始编译target...." >>$logPath
     xcodebuild  -target  $projectName  -configuration $buildConfig clean build SYMROOT=$buildAppToDir
 fi
 #判断编译结果
 if test $? -eq 0
 then
-echo "===================编译成功==================="
+echo "~~~~~~~~~~~~~~~~~~~编译成功~~~~~~~~~~~~~~~~~~~"
 else
-echo "~~~~~~~~~~~~~~~~~~~编译失败~~~~~~~~~~~~~~~~~~~"
+echo "~~~~~~~~~~~~~~~~~~~编译失败~~~~~~~~~~~~~~~~~~~" >>$logPath
 exit 1
 fi
 
 ###############开始打包成.ipa
 ipaName=`echo $projectName | tr "[:upper:]" "[:lower:]"` #将项目名转小写
 appDir=$buildAppToDir/$buildConfig-iphoneos/  #app所在路径
-echo "开始打包$projectName.app成$projectName.ipa....."
+echo "开始打包$projectName.app成$projectName.ipa....." >>$logPath
 xcrun -sdk iphoneos PackageApplication -v $appDir/$projectName.app -o $appDir/$ipaName.ipa #将app打包成ipa
 
 ###############开始拷贝到目标下载目录
@@ -74,20 +87,20 @@ cp -f -p ${iconImages[iconImagesLength-1]} $wwwIPADir/$iconName  #拷贝icon.png
 #检查文件是否存在
 if [ -f "$appDir/$ipaName.ipa" ]
 then
-echo "打包$ipaName.ipa成功."
+echo "打包$ipaName.ipa成功." >>$logPath
 else
-echo "打包$ipaName.ipa失败."
+echo "打包$ipaName.ipa失败." >>$logPath
 exit 1
 fi
 cp -f -p $appDir/$ipaName.ipa $wwwIPADir/$ipaName.ipa   #拷贝ipa文件
-echo "复制$ipaName.ipa到${wwwIPADir}成功"
+echo "复制$ipaName.ipa到${wwwIPADir}成功" >>$logPath
 
 ###############计算文件大小和最后更新时间
 fileSize=`stat $appDir/$ipaName.ipa |awk '{if($8!=4096){size=size+$8;}} END{print "文件大小:", size/1024/1024,"M"}'`
 lastUpdateDate=`stat $appDir/$ipaName.ipa | awk '{print "最后更新时间:",$13,$14,$15,$16}'`
-echo $fileSize
-echo $lastUpdateDate
-
+echo "$fileSize"  >>$logPath
+echo "$lastUpdateDate" >>$logPath
+ 
 plistDir=${wwwIPADir}/$ipaName.plist #plist文件的路径
 htmlDir=${wwwIPADir}/index.html #html文件的路径
 
@@ -126,6 +139,8 @@ cat << EOF > $plistDir
 	</plist>
 EOF
 
+echo "生成plist文件到$plistDir成功"  >>$logPath
+
 ###############生成html下载页面
 cat << EOF > $htmlDir
       <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -152,3 +167,10 @@ cat << EOF > $htmlDir
         </body>
       </html>
 EOF
+
+echo "生成html文件到$htmlDir成功"  >>$logPath
+echo "结束时间:$(date_Y_M_D_W_T)" >>$logPath
+echo "~~~~~~~~~~~~~~~~~~~结束编译~~~~~~~~~~~~~~~~~~~" >>$logPath
+echo "~~~~~~~~~~~~~~~~~~~结束编译，处理成功~~~~~~~~~~~~~~~~~~~"
+echo "\n" >>$logPath
+
