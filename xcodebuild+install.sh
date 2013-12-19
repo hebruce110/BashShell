@@ -1,4 +1,5 @@
 #! bin/bash
+export LC_ALL=zh_CN.GB2312;export LANG=zh_CN.GB2312
 ###############配置项目名称和路径等相关参数
 projectName="PinkDiary" #项目所在目录的名称
 isWorkSpace=false  #判断是用的workspace还是直接project，workspace设置为true，否则设置为false
@@ -15,7 +16,16 @@ url="http://192.168.1.115/pd" #下载路径
 ##########################################################################################
 
 ###Log的路径,如果发现log里又乱码请在终端执行:export LC_ALL=zh_CN.GB2312;export LANG=zh_CN.GB2312
-logPath=~/xcodebuild_$buildConfig.log
+logDir=~/xcodebuild
+mkdir -pv $logDir
+logPath=$logDir/$projectName-$buildConfig.log
+echo "~~~~~~~~~~~~~~~~~~~开始编译~~~~~~~~~~~~~~~~~~~" >>$logPath
+if [ -d "$logDir" ]; then
+	echo "${logDir}文件目录存在"
+else 
+	echo "${logDir}文件目录不存在,创建${logDir}目录成功"
+	echo "创建${logDir}目录成功" >>$logPath
+fi
 
 date_Y_M_D_W_T()
 {
@@ -26,7 +36,6 @@ date_Y_M_D_W_T()
 }
 
 ###############检查html等文件放置目录是否存在，不存在就创建
-echo "~~~~~~~~~~~~~~~~~~~开始编译~~~~~~~~~~~~~~~~~~~" >>$logPath
 echo "开始时间:$(date_Y_M_D_W_T)" >>$logPath
 echo "项目名称:$projectName" >>$logPath
 echo "编译模式:$buildConfig" >>$logPath
@@ -65,6 +74,7 @@ then
 echo "~~~~~~~~~~~~~~~~~~~编译成功~~~~~~~~~~~~~~~~~~~"
 else
 echo "~~~~~~~~~~~~~~~~~~~编译失败~~~~~~~~~~~~~~~~~~~" >>$logPath
+echo "\n" >>$logPath
 exit 1
 fi
 
