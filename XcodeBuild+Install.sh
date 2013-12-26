@@ -47,7 +47,9 @@ loginDate=`echo $loginInfo |awk '{print $3,$4,$5}'`
 echo "登陆时间:$loginDate" >>$logPath
 loginServer=`echo $loginInfo |awk '{print $6}'`
 if [ -n "$loginServer" ]; then
-	echo "登陆用户IP:$(replaceString $loginServer)" >>$logPath
+echo "登陆用户IP:$(replaceString $loginServer)" >>$logPath
+else
+echo "登陆用户IP:localhost(127.0.0.1)" >>$logPath
 fi
 
 if [ -d "$logDir" ]; then
