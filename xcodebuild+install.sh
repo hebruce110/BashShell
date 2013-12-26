@@ -1,31 +1,27 @@
 #! bin/bash
 export LC_ALL=zh_CN.GB2312;export LANG=zh_CN.GB2312
 ###############配置项目名称和路径等相关参数
-projectName="PinkDiary" #项目所在目录的名称
-isWorkSpace=false  #判断是用的workspace还是直接project，workspace设置为true，否则设置为false
-projectDir=~/work/PinkDiary_Build #项目所在目录的绝对路径
+projectName="PinkCommunity" #项目所在目录的名称
+isWorkSpace=true  #判断是用的workspace还是直接project，workspace设置为true，否则设置为false
+projectDir=~/work/PinkCommunity_Build #项目所在目录的绝对路径
 buildConfig="CWeb" #编译的方式,默认为Release,还有Debug等
 
 ###############配置下载的文件名称和路径等相关参数
-appName="粉粉日记"  #在网页上显示的名字
-wwwIPADir=~/Documents/www/pd/ #html，ipa，icon，plist最后所在的目录绝对路径
-url="http://192.168.1.115/pd" #下载路径
+appName="粉粉社区"  #在网页上显示的名字
+wwwIPADir=~/Documents/www/pc/ #html，ipa，icon，plist最后所在的目录绝对路径
+url="http://192.168.1.115/pc" #下载路径
 
 ##########################################################################################
 ##############################以下部分为自动生产部分，不需要手动修改############################
 ##########################################################################################
 
-###Log的路径,如果发现log里又乱码请在终端执行:export LC_ALL=zh_CN.GB2312;export LANG=zh_CN.GB2312
-logDir=~/xcodebuild
-mkdir -pv $logDir
-logPath=$logDir/$projectName-$buildConfig.log
-echo "~~~~~~~~~~~~~~~~~~~开始编译~~~~~~~~~~~~~~~~~~~" >>$logPath
-if [ -d "$logDir" ]; then
-	echo "${logDir}文件目录存在"
-else 
-	echo "${logDir}文件目录不存在,创建${logDir}目录成功"
-	echo "创建${logDir}目录成功" >>$logPath
-fi
+####################### FUCTION  START #######################
+replaceString(){
+	local inputString=$1
+	result=${inputString//(/}
+	result=${result//)/}
+	echo $result
+}
 
 date_Y_M_D_W_T()
 {
@@ -34,6 +30,30 @@ date_Y_M_D_W_T()
     DT="$(date +%Y年%m月%d日) ${WEEKDAYS[$WEEKDAY]} $(date "+%H:%M:%S")"
     echo "$DT"
 }
+####################### FUCTION  END #######################
+
+###Log的路径,如果发现log里又乱码请在终端执行:export LC_ALL=zh_CN.GB2312;export LANG=zh_CN.GB2312
+logDir=~/xcodebuild
+mkdir -pv $logDir
+logPath=$logDir/$projectName-$buildConfig.log
+echo "~~~~~~~~~~~~~~~~~~~开始编译~~~~~~~~~~~~~~~~~~~" >>$logPath
+
+loginInfo=`who am i`
+loginUser=`echo $loginInfo |awk '{print $1}'`
+echo "登陆用户:$loginUser" >>$logPath
+loginDate=`echo $loginInfo |awk '{print $3,$4,$5}'`
+echo "登陆时间:$loginDate" >>$logPath
+loginServer=`echo $loginInfo |awk '{print $6}'`
+if [ -n "$loginServer" ]; then
+	echo "登陆用户IP:$(replaceString $loginServer)" >>$logPath
+fi
+
+if [ -d "$logDir" ]; then
+	echo "${logDir}文件目录存在"
+else 
+	echo "${logDir}文件目录不存在,创建${logDir}目录成功"
+	echo "创建${logDir}目录成功" >>$logPath
+fi
 
 ###############检查html等文件放置目录是否存在，不存在就创建
 echo "开始时间:$(date_Y_M_D_W_T)" >>$logPath
@@ -111,8 +131,8 @@ lastUpdateDate=`stat $appDir/$ipaName.ipa | awk '{print "最后更新时间:",$1
 echo "$fileSize"  >>$logPath
 echo "$lastUpdateDate" >>$logPath
  
-plistDir=${wwwIPADir}/$ipaName.plist #plist文件的路径
-htmlDir=${wwwIPADir}/index.html #html文件的路径
+plistDir=${wwwIPADir}$ipaName.plist #plist文件的路径
+htmlDir=${wwwIPADir}index.html #html文件的路径
 
 ###############生成PLIST文件
 cat << EOF > $plistDir
