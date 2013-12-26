@@ -1,5 +1,4 @@
 #! bin/bash
-export LC_ALL=zh_CN.GB2312;export LANG=zh_CN.GB2312
 ###############配置项目名称和路径等相关参数
 projectName="PinkCommunity" #项目所在目录的名称
 isWorkSpace=true  #判断是用的workspace还是直接project，workspace设置为true，否则设置为false
@@ -16,6 +15,9 @@ url="http://192.168.1.115/pc" #下载路径
 ##########################################################################################
 
 ####################### FUCTION  START #######################
+
+export LC_ALL=zh_CN.GB2312;export LANG=zh_CN.GB2312
+
 replaceString(){
 	local inputString=$1
 	result=${inputString//(/}
