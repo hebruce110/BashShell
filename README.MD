@@ -7,7 +7,7 @@
 
 ####XcodeBuild+Install.sh
 ---
-1.xcode命令行编译生成ipa包
+1.xcode命令行编译生成ipa包，打包相关的Log都输出到~/xcodebuild目录
 
 2.生成plist文件和html下载页面
 
