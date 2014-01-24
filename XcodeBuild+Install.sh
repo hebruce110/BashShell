@@ -1,9 +1,10 @@
 #! bin/bash
+export LC_ALL=zh_CN.GB2312;export LANG=zh_CN.GB2312
 ###############配置项目名称和路径等相关参数
 projectName="PinkCommunity" #项目所在目录的名称
 isWorkSpace=true  #判断是用的workspace还是直接project，workspace设置为true，否则设置为false
 projectDir=~/work/PinkCommunity_Build #项目所在目录的绝对路径
-buildConfig="CWeb" #编译的方式,默认为Release,还有Debug等
+buildConfig="CWeb" #编译的方式,默认为Release,C91Store,CWeb,还有Debug等
 
 ###############配置下载的文件名称和路径等相关参数
 appName="粉粉社区"  #在网页上显示的名字
@@ -15,9 +16,6 @@ url="http://192.168.1.115/pc" #下载路径
 ##########################################################################################
 
 ####################### FUCTION  START #######################
-
-export LC_ALL=zh_CN.GB2312;export LANG=zh_CN.GB2312
-
 replaceString(){
 	local inputString=$1
 	result=${inputString//(/}
@@ -47,9 +45,9 @@ loginDate=`echo $loginInfo |awk '{print $3,$4,$5}'`
 echo "登陆时间:$loginDate" >>$logPath
 loginServer=`echo $loginInfo |awk '{print $6}'`
 if [ -n "$loginServer" ]; then
-echo "登陆用户IP:$(replaceString $loginServer)" >>$logPath
+	echo "登陆用户IP:$(replaceString $loginServer)" >>$logPath
 else
-echo "登陆用户IP:localhost(127.0.0.1)" >>$logPath
+    echo "登陆用户IP:localhost(127.0.0.1)" >>$logPath
 fi
 
 if [ -d "$logDir" ]; then
@@ -191,7 +189,10 @@ cat << EOF > $htmlDir
           <img src="./$iconName" width=$iconSize height = $iconSize>
           <ul>    
             <li>
-              <h2><a href="itms-services://?action=download-manifest&amp;url=$url/$ipaName.plist">安装$appName(V$bundleVersion.$bundleBuildVersion)</a></h2>
+              <h2>
+              <a href="itms-services://?action=download-manifest&amp;url=$url/$ipaName.plist">手机点击安装$appName(V$bundleVersion.$bundleBuildVersion)</a>
+              <a href="$url/$ipaName.ipa">直接下载ipa包</a>
+              </h2>
             </li>
           </ul>
           <p>
