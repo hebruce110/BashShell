@@ -188,12 +188,8 @@ cat << EOF > $htmlDir
           <h2>$appName</h2>
           <img src="./$iconName" width=$iconSize height = $iconSize>
           <ul>    
-            <li>
-              <h2>
-              <a href="itms-services://?action=download-manifest&amp;url=$url/$ipaName.plist">手机点击安装$appName(V$bundleVersion.$bundleBuildVersion)</a>
-              <a href="$url/$ipaName.ipa">直接下载ipa包</a>
-              </h2>
-            </li>
+            <li><h2><a href="itms-services://?action=download-manifest&amp;url=$url/$ipaName.plist">手机安装$appName(V$bundleVersion.$bundleBuildVersion)</a></h2></li>
+            <li><h2><a href="$url/$ipaName.ipa">电脑下载IPA包</a></h2></li>
           </ul>
           <p>
             $fileSize
