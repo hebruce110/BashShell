@@ -1,0 +1,6 @@
+[email]
+username = test@heyuan110.com
+passwd = test_password
+smtp = smtp.exmail.qq.com
+imap = imap.exmail.qq.com
+pop3 = pop.exmail.qq.com

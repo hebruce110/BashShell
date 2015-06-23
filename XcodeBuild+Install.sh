@@ -1,4 +1,7 @@
 #! bin/bash
+#Author:Bruce http://www.heyuan110.com
+#Update Date:2015.06.23
+
 export LC_ALL=zh_CN.GB2312;export LANG=zh_CN.GB2312
 ###############配置项目名称和路径等相关参数
 projectName="PinkCommunity" #项目所在目录的名称
