@@ -1,7 +1,7 @@
 #! bin/bash
 #Author:Bruce http://www.heyuan110.com
 #Update Date:2015.06.23
-#Use:命令行进入目录直接执行sh build.sh即可完成打包
+#Use:命令行进入目录直接执行sh Build+DeployToFir.sh即可完成打包发布到fir.im
 
 export LC_ALL=zh_CN.GB2312;
 export LANG=zh_CN.GB2312
@@ -77,6 +77,8 @@ cp -f -p $appDir/$ipaName.ipa $path   #拷贝ipa文件
 echo "复制$ipaName.ipa到${wwwIPADir}成功"
 echo "~~~~~~~~~~~~~~~~~~~结束编译，处理成功~~~~~~~~~~~~~~~~~~~"
 #open $wwwIPADir
+
+#####开始上传，如果只需要打ipa包出来不需要上传，可以删除下面的代码
 export LANG=en_US
 export LC_ALL=en_US;
 echo "正在上传到fir.im...."
