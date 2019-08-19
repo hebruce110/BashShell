@@ -1,4 +1,5 @@
 #!/bin/sh
+#Ubuntu16.04
 
 # Install RabbitMQ signing key
 curl -fsSL https://github.com/rabbitmq/signing-keys/releases/download/2.0/rabbitmq-release-signing-key.asc | sudo apt-key add -
