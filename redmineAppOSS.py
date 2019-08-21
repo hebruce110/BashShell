@@ -7,7 +7,7 @@ import oss2
 import os, sys
 import time
 
-auth = oss2.Auth('WMp18DWnLXFSxBMI', 'xpE5AwYr6McGhsfOnapxWKBoH9bgy7') #设置账?~O?key
+auth = oss2.Auth('xxxxx', 'xxxxxxx') #设置账?~O?key
 endpoint = 'oss-cn-shenzhen-internal.aliyuncs.com'                                       #�置桶?~_~_?~P~M
 service = oss2.Service(auth, endpoint)
 bucketName = 'patpatredmine'                                                                    #设置?~J?| ?~H??~B?个bucket
