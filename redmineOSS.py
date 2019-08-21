@@ -7,7 +7,7 @@ import oss2
 import os, sys
 import time
 
-auth = oss2.Auth('WMp18DWnLXFSxBMI', 'xpE5AwYr6McGhsfOnapxWKBoH9bgy7') #设置账号key
+auth = oss2.Auth('xxxxx', 'xxxxxxxxxxxxxxxxxxxx') #设置账号key
 endpoint = 'oss-cn-shenzhen-internal.aliyuncs.com'					#设置桶域名
 service = oss2.Service(auth, endpoint)
 bucketName = 'patpatredmine'									#设置上传到那个bucket
@@ -20,7 +20,7 @@ logging.basicConfig(filename='/usr/local/src/shell/log/redmine_sql_to_oss'+toDay
 logging.debug('debug message')
 logging.info(endpoint)
 
-sqldumpCMD = 'mysqldump -uredmine -ppatpatredmine2016 redmine >'+sqlFilePath
+sqldumpCMD = 'mysqldump -uredmine -pxxxxxxxxx redmine >'+sqlFilePath
 val = os.system(sqldumpCMD)
 
 if val!=0:
